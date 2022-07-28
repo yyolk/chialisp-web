@@ -7,7 +7,7 @@ One of the most important puzzles in the Chia ecosystem is the **singleton**.
 This is a puzzle that assures anyone who looks at can see that it has a unique ID that no other coin has.
 Parties can decide to accept messages or commitments from that unique ID with the assurance that the party who controls the singleton is not double dipping or impersonating someone else.
 
-This puzzle is an [outer puzzle](/docs/common_functions) and is used to wrap pooling puzzles, NFTs, and decentralized identities.
+This puzzle is an [outer puzzle][outer-and-inner-puzzles] and is used to wrap pooling puzzles, NFTs, and decentralized identities.
 Any inner puzzle can be wrapped with this puzzle if it has necessity for uniqueness.
 
 ## Design choices
@@ -21,7 +21,7 @@ Odd was chosen over even because you may want to have singletons create other, n
 Coins can be multiples of 10 so you can send a full XCH rather than an XCH and a mojo.
 No matter how many even amounts you subtract from an odd amount, the end result will always be odd.
 * **Singletons always wrap their odd child.** This abstracts some of the singleton functionality away from the inner puzzles.
-If an inner puzzle creates an odd coin, it doesn't have to worry about making it a singleton, the [outer puzzle will take care of that](https://chialisp.com/docs/common_functions/#outer-and-inner-puzzles).
+If an inner puzzle creates an odd coin, it doesn't have to worry about making it a singleton, the [outer puzzle will take care of that][outer-and-inner-puzzles].
 It also prevents an inner puzzle from accidentally melting the singleton by forgetting to wrap its odd output.
 * **A specific magic melt value determines whether the singleton wraps its child.** If you would like to destroy a singleton and use its amount to create a new non-singleton coin, you need to output a `CREATE_COIN` condition that uses the amount `-113`.
 When the singleton outer puzzle sees that condition, it filters it out.
@@ -505,3 +505,6 @@ Since this coin cannot be signed, we must ensure somehow that if it is excluded,
 We use `'$'` because it's one byte and somewhat relevant.
 
 The coin ID assertion is simply to ensure that we are being told the truth about our id. Otherwise, we could piggy back on another claim by using that coin's ID and asserting the announcement that the singleton creates for it.
+
+
+[outer-and-inner-puzzles]: https://chialisp.com/docs/common_functions/#outer-and-inner-puzzles
